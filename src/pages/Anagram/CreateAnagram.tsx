@@ -165,7 +165,7 @@ const CreateAnagram = () => {
         return;
       }
 
-      // 3. Siapkan FormData
+      // Form Data
       const formData = new FormData();
 
       formData.append("name", gameInfo.name);
@@ -210,7 +210,6 @@ const CreateAnagram = () => {
         body: formData,
       });
 
-      // Cek response, hati-hati kalau backend balikin HTML error
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") === -1) {
         throw new Error(

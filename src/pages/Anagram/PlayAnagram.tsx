@@ -68,7 +68,7 @@ const PlayAnagram = () => {
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
 
-  // --- STATE DATA & UI ---
+  // STATE DATA & UI
   const [gameData, setGameData] = useState<GamePlayData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,14 +106,14 @@ const PlayAnagram = () => {
   // Track previous question index to prevent unnecessary re-initialization
   const prevQuestionIndexRef = useRef<number>(-1);
 
-  // --- AUTH CHECK ---
+  // AUTH CHECK
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [token, navigate]);
 
-  // --- LOGIC STOPWATCH ---
+  // LOGIC STOPWATCH
   useEffect(() => {
     if (!isLoading && !gameFinished && !isPaused) {
       const timer = setInterval(() => {
@@ -123,7 +123,7 @@ const PlayAnagram = () => {
     }
   }, [isLoading, gameFinished, isPaused]);
 
-  // --- SOUND EFFECTS ---
+  // SOUND EFFECTS
   const playSound = (type: "pop" | "error" | "success") => {
     const audio = new Audio(`/sounds/${type}.mp3`);
     audio.play().catch((err) => console.error("Error playing sound:", err));
@@ -247,7 +247,7 @@ const PlayAnagram = () => {
     }
   }, [currentQuestionIndex, gameData, answeredQuestions]);
 
-  // ✅ FUNGSI VALIDASI STRICT (filter spaces)
+  // Validate if letter is correct for given position
   const isLetterCorrect = useCallback(
     (letter: string, position: number): boolean => {
       if (!gameData?.questions[currentQuestionIndex]?.correct_word) return true;
@@ -291,7 +291,7 @@ const PlayAnagram = () => {
     [gameData, answeredQuestions],
   );
 
-  // ✅ AUTO-CHECK DAN NEXT - DENGAN SCORING YANG BENAR
+  // AUTO-CHECK AND HANDLE ANSWER
   useEffect(() => {
     const checkAnswer = () => {
       // FIRST: Check if already answered (prevent re-checking)
@@ -319,8 +319,6 @@ const PlayAnagram = () => {
         "",
       );
 
-      // Strict validation: Ensure the filled slots actually match current question
-      // This prevents stale state from previous questions triggering a win
       if (
         answerSlots.join("").toUpperCase() !== correctWordNoSpaces.toUpperCase()
       ) {
@@ -338,13 +336,10 @@ const PlayAnagram = () => {
       // 3. Made mistakes but no hints: letterCount × 1
       let points = 0;
       if (hintsUsed > 0) {
-        // Kalau pakai hint: panjang huruf - jumlah hint
         points = letterCount - hintsUsed;
       } else if (hadWrongInput) {
-        // Kalau ada salah input tapi tidak pakai hint: × 1
         points = letterCount * 1;
       } else {
-        // Perfect: × 2
         points = letterCount * 2;
       }
 
@@ -394,7 +389,6 @@ const PlayAnagram = () => {
     findNextUnansweredQuestionIndex,
   ]);
 
-  // --- HANDLERS (Dipindahkan ke atas sebelum keyboard handler) ---
   const handleLetterClick = useCallback(
     (index: number) => {
       if (
@@ -413,15 +407,13 @@ const PlayAnagram = () => {
       const clickedLetter = availableLetters[index].letter;
 
       if (!isLetterCorrect(clickedLetter, firstEmptySlot)) {
-        // 🛑 UBAH LOGIC ERROR DI SINI 🛑
-        setErrorSlotIndex(firstEmptySlot); // <-- Tentukan slot mana yang error
+        setErrorSlotIndex(firstEmptySlot);
         setShowError(true);
         playSound("error");
         setHadWrongInput(true);
-        // Reset setelah 500ms (sesuai durasi animasinya)
         setTimeout(() => {
           setShowError(false);
-          setErrorSlotIndex(null); // <-- Reset index error
+          setErrorSlotIndex(null);
         }, 500);
         return;
       }
@@ -567,7 +559,7 @@ const PlayAnagram = () => {
         );
 
         if (firstEmptySlot !== -1 && !isLetterCorrect(key, firstEmptySlot)) {
-          setErrorSlotIndex(firstEmptySlot); // <-- Tentukan slot mana yang error
+          setErrorSlotIndex(firstEmptySlot); // Tentukan slot mana yang error
           setShowError(true);
           playSound("error");
           setHadWrongInput(true); // Mark that user made a mistake
@@ -622,7 +614,7 @@ const PlayAnagram = () => {
     }
   };
 
-  // --- FULLSCREEN LOGIC ---
+  // FULLSCREEN LOGIC
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -697,7 +689,7 @@ const PlayAnagram = () => {
     setHadWrongInput(false);
   };
 
-  // --- RENDER DATA DINAMIS ---
+  // RENDER DINAMIC CONTENT
   const currentQuestion = gameData?.questions[currentQuestionIndex];
   const totalQuestions =
     gameData?.questions.length || TOTAL_QUESTIONS_PLACEHOLDER;
@@ -709,7 +701,7 @@ const PlayAnagram = () => {
     maxHints = Math.ceil(len / 5);
   }
 
-  // --- LOADING & ERROR STATES ---
+  // LOADING & ERROR SCREEN
   if (isLoading)
     return (
       <div className="w-full h-screen flex justify-center items-center text-xl text-slate-600">
@@ -727,7 +719,7 @@ const PlayAnagram = () => {
       </div>
     );
 
-  // --- GAME FINISHED SCREEN ---
+  // GAME FINISHED SCREEN
   if (gameFinished) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50 flex flex-col justify-center items-center p-6">
@@ -792,7 +784,7 @@ const PlayAnagram = () => {
     );
   }
 
-  // --- GAME PLAY SCREEN ---
+  // GAME PLAY SCREEN
   if (!currentQuestion) {
     return (
       <div className="w-full h-screen flex justify-center items-center text-xl text-slate-600">
