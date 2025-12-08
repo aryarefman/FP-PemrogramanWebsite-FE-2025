@@ -783,7 +783,8 @@ const PairOrNoPairGame = () => {
 
     const fetchData = async () => {
       try {
-        const apiUrl = `${import.meta.env.VITE_API_URL}/api/game/game-type/pair-or-no-pair/${gameId}/play/public`;
+        const baseUrl = import.meta.env.VITE_API_URL || "https://api.it-its.id";
+        const apiUrl = `${baseUrl}/api/game/game-type/pair-or-no-pair/${gameId}/play/public`;
         console.log("[DEBUG] Fetching from:", apiUrl);
 
         const response = await fetch(apiUrl);
