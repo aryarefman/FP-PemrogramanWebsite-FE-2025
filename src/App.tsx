@@ -68,6 +68,8 @@ function App() {
           <Route
             path="/pair-or-no-pair/edit/:id"
             element={<EditPairOrNoPair />}
+          />
+          <Route
             path="/speed-sorting/edit/:id"
             element={<EditSpeedSorting />}
           />
