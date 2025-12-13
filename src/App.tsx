@@ -16,9 +16,22 @@ import ProtectedRoute from "./routes/ProtectedRoutes";
 import CreateAnagram from "./pages/Anagram/CreateAnagram";
 import PlayAnagram from "./pages/Anagram/PlayAnagram";
 import EditAnagram from "./pages/Anagram/EditAnagram";
+import MazeChase from "./pages/maze-chase/MazeChase";
+import CreateMazeChase from "./pages/maze-chase/CreateMazeChase";
+import EditMazeChase from "./pages/maze-chase/EditMazeChase";
 
 import PairOrNoPairGame from "./pages/pair-or-no-pair";
 import CreatePairOrNoPair from "./pages/pair-or-no-pair/create";
+import EditPairOrNoPair from "./pages/pair-or-no-pair/edit";
+
+import CreateSlidingPuzzle from "./pages/sliding-puzzle/CreateSlidingPuzzle";
+import EditSlidingPuzzle from "./pages/sliding-puzzle/EditSlidingPuzzle";
+import PlaySlidingPuzzle from "./pages/sliding-puzzle/PlaySlidingPuzzle";
+
+// 📌 TAMBAHAN 2: Import Komponen Game Whack-a-Mole
+import WhackAMoleGame from "./pages/whack-a-mole";
+import CreateWhackAMole from "./pages/whack-a-mole/create";
+import EditWhackAMole from "./pages/whack-a-mole/edit";
 
 // 📌 TAMBAHAN 2: Import Komponen Game Whack-a-Mole
 import WhackAMoleGame from "./pages/whack-a-mole";
@@ -34,6 +47,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/sandbox" element={<Sandbox />} />
         <Route path="/quiz/play/:id" element={<Quiz />} />
+        <Route path="/maze-chase/play/:id" element={<MazeChase />} />
         <Route path="/speed-sorting/play/:id" element={<SpeedSorting />} />
         <Route path="/anagram/play/:id" element={<PlayAnagram />} />
         <Route
@@ -41,6 +55,10 @@ function App() {
           element={<PairOrNoPairGame />}
         />
         <Route path="/whack-a-mole/play/:gameId" element={<WhackAMoleGame />} />
+        <Route
+          path="/sliding-puzzle/play/:id"
+          element={<PlaySlidingPuzzle />}
+        />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
@@ -57,13 +75,27 @@ function App() {
           />
           <Route path="/create-whack-a-mole" element={<CreateWhackAMole />} />
           <Route path="/whack-a-mole/edit/:id" element={<EditWhackAMole />} />
+          <Route path="/create-maze-chase" element={<CreateMazeChase />} />
+          <Route path="/create-anagram" element={<CreateAnagram />} />
           <Route path="/quiz/edit/:id" element={<EditQuiz />} />
+          <Route
+            path="/pair-or-no-pair/edit/:id"
+            element={<EditPairOrNoPair />}
+          />
           <Route
             path="/speed-sorting/edit/:id"
             element={<EditSpeedSorting />}
           />
-          <Route path="/create-anagram" element={<CreateAnagram />} />
+          <Route path="/maze-chase/edit/:id" element={<EditMazeChase />} />
           <Route path="/anagram/edit/:id" element={<EditAnagram />} />
+          <Route
+            path="/create-sliding-puzzle"
+            element={<CreateSlidingPuzzle />}
+          />
+          <Route
+            path="/sliding-puzzle/edit/:id"
+            element={<EditSlidingPuzzle />}
+          />
         </Route>
       </Routes>
     </>
