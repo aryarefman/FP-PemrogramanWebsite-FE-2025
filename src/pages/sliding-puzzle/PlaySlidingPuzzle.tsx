@@ -110,6 +110,8 @@ function PlaySlidingPuzzle() {
   const [isLoadingGame, setIsLoadingGame] = useState(false); // Loading state after clicking Start
   const [countdown, setCountdown] = useState<string>("3");
   const [isMuted, setIsMuted] = useState(false);
+  const [showZoomAlert, setShowZoomAlert] = useState(true); // Show immediately
+  const [hasConfirmedZoom, setHasConfirmedZoom] = useState(false);
 
   // Dark mode styles
   const styles = {
@@ -198,6 +200,11 @@ function PlaySlidingPuzzle() {
       }
     };
   }, []);
+
+  const handleCloseZoomAlert = () => {
+    setShowZoomAlert(false);
+    setHasConfirmedZoom(true);
+  };
 
   // Start Screen Audio (Hello)
   useEffect(() => {
@@ -679,6 +686,131 @@ function PlaySlidingPuzzle() {
         overflowY: "auto",
       }}
     >
+      {/* Zoom Alert Modal */}
+      {showZoomAlert && !hasConfirmedZoom && !isStarted && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 99999,
+            padding: "20px",
+          }}
+        >
+          <div
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(20, 20, 35, 0.98) 0%, rgba(30, 30, 50, 0.98) 100%)",
+              border: "2px solid rgba(255, 107, 53, 0.6)",
+              borderRadius: "24px",
+              padding: "40px 50px",
+              maxWidth: "480px",
+              width: "100%",
+              textAlign: "center",
+              boxShadow:
+                "0 25px 80px rgba(0,0,0,0.8), 0 0 60px rgba(255, 107, 53, 0.3)",
+              fontFamily: "'Sen', sans-serif",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "48px",
+                marginBottom: "16px",
+              }}
+            >
+              💡
+            </div>
+            <h2
+              style={{
+                fontSize: "28px",
+                fontWeight: "800",
+                color: "#fff",
+                marginBottom: "16px",
+              }}
+            >
+              Tips untuk Pengalaman Terbaik
+            </h2>
+            <p
+              style={{
+                fontSize: "18px",
+                color: "#e0e0e0",
+                marginBottom: "24px",
+                lineHeight: "1.6",
+              }}
+            >
+              Atur browser zoom ke{" "}
+              <span
+                style={{
+                  color: "#ff6b35",
+                  fontWeight: "700",
+                  fontSize: "24px",
+                }}
+              >
+                67%
+              </span>{" "}
+              untuk tampilan optimal.
+            </p>
+            <div
+              style={{
+                background: "rgba(255, 107, 53, 0.15)",
+                border: "1px solid rgba(255, 107, 53, 0.3)",
+                borderRadius: "12px",
+                padding: "16px 20px",
+                marginBottom: "28px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "15px",
+                  color: "#ffaa80",
+                  margin: 0,
+                }}
+              >
+                Klik <strong style={{ color: "#fff" }}>⋮ (titik 3)</strong> di
+                kanan atas browser
+                <br />→ pilih <strong style={{ color: "#fff" }}>Zoom</strong> →
+                atur ke <strong style={{ color: "#ff6b35" }}>67%</strong>
+              </p>
+            </div>
+            <button
+              onClick={handleCloseZoomAlert}
+              style={{
+                background: "linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)",
+                border: "none",
+                borderRadius: "12px",
+                padding: "14px 40px",
+                fontSize: "16px",
+                fontWeight: "700",
+                color: "#fff",
+                cursor: "pointer",
+                boxShadow: "0 8px 25px rgba(255, 107, 53, 0.4)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow =
+                  "0 12px 35px rgba(255, 107, 53, 0.5)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 8px 25px rgba(255, 107, 53, 0.4)";
+              }}
+            >
+              Mengerti
+            </button>
+          </div>
+        </div>
+      )}
+
       <style>
         {`
                     @import url('https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap');
@@ -1652,6 +1784,7 @@ function PlaySlidingPuzzle() {
               >
                 <button
                   onClick={shuffleTiles}
+                  disabled={!hasConfirmedZoom}
                   style={{
                     flex: 2,
                     display: "flex",
@@ -1662,31 +1795,40 @@ function PlaySlidingPuzzle() {
                     fontSize: "1.2rem",
                     fontWeight: 800,
                     fontFamily: "'Sen', sans-serif",
-                    background:
-                      "linear-gradient(90deg, #ff6b35 0%, #ff4500 100%)",
+                    background: hasConfirmedZoom
+                      ? "linear-gradient(90deg, #ff6b35 0%, #ff4500 100%)"
+                      : "linear-gradient(90deg, #666 0%, #444 100%)",
                     color: "#fff",
                     border: "none",
                     borderRadius: "16px",
-                    cursor: "pointer",
-                    boxShadow:
-                      "0 10px 30px -5px rgba(255, 69, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)",
+                    cursor: hasConfirmedZoom ? "pointer" : "not-allowed",
+                    boxShadow: hasConfirmedZoom
+                      ? "0 10px 30px -5px rgba(255, 69, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)"
+                      : "none",
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     textTransform: "uppercase",
                     letterSpacing: "1px",
+                    opacity: hasConfirmedZoom ? 1 : 0.6,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "translateY(-2px) scale(1.02)";
-                    e.currentTarget.style.boxShadow =
-                      "0 15px 40px -5px rgba(255, 69, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)";
+                    if (hasConfirmedZoom) {
+                      e.currentTarget.style.transform =
+                        "translateY(-2px) scale(1.02)";
+                      e.currentTarget.style.boxShadow =
+                        "0 15px 40px -5px rgba(255, 69, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)";
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0) scale(1)";
-                    e.currentTarget.style.boxShadow =
-                      "0 10px 30px -5px rgba(255, 69, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)";
+                    if (hasConfirmedZoom) {
+                      e.currentTarget.style.transform =
+                        "translateY(0) scale(1)";
+                      e.currentTarget.style.boxShadow =
+                        "0 10px 30px -5px rgba(255, 69, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)";
+                    }
                   }}
                 >
-                  <Play size={24} fill="white" /> START GAME
+                  <Play size={24} fill="white" />{" "}
+                  {hasConfirmedZoom ? "START GAME" : "Konfirmasi Zoom Dulu"}
                 </button>
                 <button
                   onClick={handleExit}

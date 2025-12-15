@@ -196,20 +196,13 @@ function EditSlidingPuzzle() {
                 label="Thumbnail Image (Leave empty to keep current)"
                 allowedTypes={["image/png", "image/jpeg"]}
                 maxSize={2 * 1024 * 1024}
+                defaultValue={
+                  puzzle.thumbnail_image
+                    ? `${import.meta.env.VITE_API_URL}/${puzzle.thumbnail_image}`
+                    : undefined
+                }
                 onChange={(file) => setThumbnail(file)}
               />
-              {!thumbnail && puzzle.thumbnail_image && (
-                <div className="mt-2">
-                  <Typography variant="small" className="text-gray-500">
-                    Current thumbnail:
-                  </Typography>
-                  <img
-                    src={`${import.meta.env.VITE_API_URL}/${puzzle.thumbnail_image}`}
-                    alt="Current thumbnail"
-                    className="mt-2 max-w-xs rounded-lg border"
-                  />
-                </div>
-              )}
             </div>
 
             <div>
@@ -217,20 +210,13 @@ function EditSlidingPuzzle() {
                 label="Puzzle Image (Leave empty to keep current)"
                 allowedTypes={["image/png", "image/jpeg"]}
                 maxSize={5 * 1024 * 1024}
+                defaultValue={
+                  puzzle.game_json.puzzle_image
+                    ? `${import.meta.env.VITE_API_URL}/${puzzle.game_json.puzzle_image}`
+                    : undefined
+                }
                 onChange={(file) => setPuzzleImage(file)}
               />
-              {!puzzleImage && puzzle.game_json.puzzle_image && (
-                <div className="mt-2">
-                  <Typography variant="small" className="text-gray-500">
-                    Current puzzle image:
-                  </Typography>
-                  <img
-                    src={`${import.meta.env.VITE_API_URL}/${puzzle.game_json.puzzle_image}`}
-                    alt="Current puzzle"
-                    className="mt-2 max-w-xs rounded-lg border"
-                  />
-                </div>
-              )}
             </div>
           </div>
 
