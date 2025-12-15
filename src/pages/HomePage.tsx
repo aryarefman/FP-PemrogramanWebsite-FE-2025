@@ -16,6 +16,7 @@ import { Typography } from "@/components/ui/typography";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ChevronDown, User } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import iconHeartSolid from "../assets/images/icon-heart-solid.svg";
 import iconHeart from "../assets/images/icon-heart.svg";
 import iconPlay from "../assets/images/icon-play.svg";
@@ -38,8 +39,13 @@ type GameApiResponse = {
   name: string;
   description: string;
   thumbnail_image: string | null;
-  game_template_name: string;
-  game_template_slug: string;
+  game_template_name?: string;
+  game_template_slug?: string;
+  game_template?: {
+    id: string;
+    slug: string;
+    name: string;
+  };
   total_liked: number;
   total_played: number;
   creator_id: string;
@@ -66,6 +72,7 @@ export default function HomePage() {
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = !!(token && user);
+  const navigate = useNavigate();
 
   const [games, setGames] = useState<Game[]>([]);
   const [gameTemplates, setGameTemplates] = useState<GameTemplate[]>([]);
@@ -90,8 +97,8 @@ export default function HomePage() {
       try {
         const response = await api.get("/api/game/template");
         setGameTemplates(response.data.data);
-      } catch (err) {
-        console.error("Failed to fetch game templates:", err);
+      } catch {
+        // Silently fail template fetch
       }
     };
     fetchGameTemplates();
@@ -117,7 +124,6 @@ export default function HomePage() {
         const url = queryString ? `/api/game?${queryString}` : "/api/game";
 
         const response = await api.get(url);
-        console.log("Fetched games data:", response.data);
 
         setGames(
           response.data.data.map(
@@ -127,8 +133,8 @@ export default function HomePage() {
                 name: g.name,
                 description: g.description,
                 thumbnail_image: g.thumbnail_image,
-                game_template_name: g.game_template_name,
-                game_template_slug: g.game_template_slug,
+                game_template_name: g.game_template_name || "",
+                game_template_slug: g.game_template_slug || "",
                 total_liked: g.total_liked || 0,
                 total_played: g.total_played || 0,
                 creator_id: g.creator_id,
@@ -138,9 +144,9 @@ export default function HomePage() {
               }) as Game,
           ),
         );
-      } catch (err) {
+      } catch {
         setError("Failed to fetch games. Please try again later.");
-        console.error("Fetch error:", err);
+        setGames([]);
       } finally {
         if (initialLoading) {
           setInitialLoading(false);
@@ -186,9 +192,7 @@ export default function HomePage() {
         game_id: gameId,
         is_like: newIsLiked,
       });
-    } catch (err) {
-      console.error("Failed to like game:", err);
-
+    } catch {
       setGames((prev) =>
         prev.map((game) => {
           if (game.id === gameId) {
@@ -212,7 +216,7 @@ export default function HomePage() {
         console.error("Game template slug is missing for game:", game);
         return;
       }
-      window.location.href = `/${game.game_template_slug}/play/${game.id}`;
+      navigate(`/${game.game_template_slug}/play/${game.id}`);
     };
 
     return (
