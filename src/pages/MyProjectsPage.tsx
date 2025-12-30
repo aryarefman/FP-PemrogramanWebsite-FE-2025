@@ -75,7 +75,7 @@ export default function MyProjectsPage() {
     try {
       await api.patch("/api/game/", {
         game_id: gameId,
-        is_publish: isPublish,
+        is_published: isPublish,
       });
 
       setProjects((prev) =>

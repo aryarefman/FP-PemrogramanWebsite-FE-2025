@@ -1310,6 +1310,120 @@ function PlaySlidingPuzzle() {
           </div>
         </div>
       )}
+      {/* ZOOM RECOMMENDATION MODAL */}
+      {!isStarted && !isLoadingGame && !isFinished && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            backgroundColor: "rgba(0, 0, 0, 0.85)",
+            backdropFilter: "blur(12px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "rgba(20, 20, 25, 0.95)",
+              border: "1px solid rgba(255, 107, 53, 0.3)",
+              borderRadius: "24px",
+              padding: "2.5rem",
+              maxWidth: "500px",
+              width: "90%",
+              textAlign: "center",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <div
+              style={{
+                width: "64px",
+                height: "64px",
+                margin: "0 auto 1.5rem",
+                background: "rgba(255, 107, 53, 0.1)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ff6b35"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <line x1="11" y1="8" x2="11" y2="14" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+            </div>
+
+            <h2
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: 800,
+                color: "#fff",
+                marginBottom: "1rem",
+                fontFamily: "'Sen', sans-serif",
+              }}
+            >
+              Zoom Recommendation
+            </h2>
+
+            <p
+              style={{
+                color: "#a0aec0",
+                fontSize: "1.1rem",
+                lineHeight: 1.6,
+                marginBottom: "2rem",
+              }}
+            >
+              For the best visual experience, we recommend setting your browser
+              zoom to <strong style={{ color: "#ff6b35" }}>67%</strong>.
+              <br />
+              <br />
+              <span style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+                (Click the ⋮ menu in your browser → Zoom → Adjust to 67%)
+              </span>
+            </p>
+
+            <button
+              onClick={(e) => {
+                const modal = e.currentTarget.parentElement?.parentElement;
+                if (modal) modal.style.display = "none";
+              }}
+              style={{
+                background: "#ff6b35",
+                color: "white",
+                border: "none",
+                padding: "1rem 2.5rem",
+                borderRadius: "12px",
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                fontFamily: "'Sen', sans-serif",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.05)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
+            >
+              Got it, I'm ready!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Phoenix Logo - Fixed position, only on Start Screen */}
       {!isStarted && !isLoadingGame && (
         <img
