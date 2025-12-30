@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "@/api/axios";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import toast from "react-hot-toast";
 import { Typography } from "@/components/ui/typography";
 import {
@@ -121,21 +121,24 @@ function PlaySlidingPuzzle() {
   };
 
   // Premium Toast Style
-  const toastStyle = {
-    style: {
-      background: "rgba(20, 20, 30, 0.95)",
-      color: "#fff",
-      border: "1px solid rgba(255, 107, 53, 0.5)",
-      fontFamily: "'Sen', sans-serif",
-      padding: "12px 20px",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-      borderRadius: "12px",
-    },
-    iconTheme: {
-      primary: "#ff6b35",
-      secondary: "#ffffff",
-    },
-  };
+  const toastStyle = useMemo(
+    () => ({
+      style: {
+        background: "rgba(20, 20, 30, 0.95)",
+        color: "#fff",
+        border: "1px solid rgba(255, 107, 53, 0.5)",
+        fontFamily: "'Sen', sans-serif",
+        padding: "12px 20px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+        borderRadius: "12px",
+      },
+      iconTheme: {
+        primary: "#ff6b35",
+        secondary: "#ffffff",
+      },
+    }),
+    [],
+  );
 
   useEffect(() => {
     const fetchPuzzle = async () => {
