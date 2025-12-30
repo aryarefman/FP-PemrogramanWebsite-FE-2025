@@ -222,7 +222,7 @@ function PlaySlidingPuzzle() {
         audio.removeEventListener("timeupdate", handleTimeUpdate);
       };
     }
-  }, [isStarted, loading]);
+  }, [isStarted, loading, isMuted]);
 
   // Countdown effect
   useEffect(() => {
@@ -252,7 +252,7 @@ function PlaySlidingPuzzle() {
         }
       };
     }
-  }, [isLoadingGame]);
+  }, [isLoadingGame, isMuted]);
 
   // BGM Logic
   const bgmRef = useRef<HTMLAudioElement | null>(null);
@@ -328,7 +328,7 @@ function PlaySlidingPuzzle() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isStarted, isPaused, isFinished, puzzle?.time_limit]);
+  }, [isStarted, isPaused, isFinished, puzzle?.time_limit, toastStyle]);
 
   const shuffleTiles = useCallback(() => {
     if (!puzzle) return;
@@ -574,6 +574,33 @@ function PlaySlidingPuzzle() {
     }
   };
 
+  const applyHint = useCallback(
+    (path: any[], found: boolean) => {
+      // Determine how many steps to show
+      const stepsToShow = 1;
+
+      const selectedMoves = path.slice(0, stepsToShow);
+      setHintMoves(selectedMoves);
+      setShowHint(true);
+
+      setHintProgress({ current: 0, total: found ? path.length : 1 });
+      setUserHintsLeft((prev) => prev - 1);
+
+      if (found) {
+        toast.success(`Solution: ${path.length} steps to solve!`, toastStyle);
+      } else {
+        toast("Best next move calculated", { icon: "💡", ...toastStyle });
+      }
+
+      const timeout = found ? 8000 : 5000;
+      setTimeout(() => {
+        setShowHint(false);
+        setHintProgress(null);
+      }, timeout);
+    },
+    [toastStyle],
+  );
+
   // Effect to apply hint once it arrives if we are waiting
   useEffect(() => {
     if (isCalculatingHint && cachedHint) {
@@ -584,36 +611,7 @@ function PlaySlidingPuzzle() {
         toast.error("Could not find a valid move.", toastStyle);
       }
     }
-  }, [cachedHint, isCalculatingHint]);
-
-  const applyHint = (path: any[], found: boolean) => {
-    // Determine how many steps to show
-    const stepsToShow = 1;
-    // if (found) {
-    //     if (gridSize === 4) stepsToShow = Math.min(2, path.length);
-    //     else if (gridSize === 5) stepsToShow = Math.min(3, path.length);
-    //     else if (gridSize >= 6) stepsToShow = Math.min(4, path.length);
-    // }
-
-    const selectedMoves = path.slice(0, stepsToShow);
-    setHintMoves(selectedMoves);
-    setShowHint(true);
-
-    setHintProgress({ current: 0, total: found ? path.length : 1 });
-    setUserHintsLeft((prev) => prev - 1);
-
-    if (found) {
-      toast.success(`Solution: ${path.length} steps to solve!`, toastStyle);
-    } else {
-      toast("Best next move calculated", { icon: "💡", ...toastStyle });
-    }
-
-    const timeout = found ? 8000 : 5000;
-    setTimeout(() => {
-      setShowHint(false);
-      setHintProgress(null);
-    }, timeout);
-  };
+  }, [cachedHint, isCalculatingHint, applyHint, toastStyle]);
 
   const addPlayCount = async (gameId: string) => {
     try {
